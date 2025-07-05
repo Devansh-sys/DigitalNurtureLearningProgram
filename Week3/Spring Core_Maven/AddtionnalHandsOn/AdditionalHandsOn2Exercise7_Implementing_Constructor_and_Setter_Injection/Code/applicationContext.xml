@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- Define the dependency bean first -->
+    <bean id="bookRepository" class="com.library.repository.BookRepository"/>
+
+    <!-- Define the BookService bean using both injection types -->
+    <bean id="bookService" class="com.library.service.BookService">
+
+        <!-- 1. Constructor Injection: For the librarianName -->
+        <!-- The 'value' attribute is used for simple types like String, int, etc. -->
+        <constructor-arg type="java.lang.String" value="Alice"/>
+
+        <!-- 2. Setter Injection: For the BookRepository dependency -->
+        <!-- The 'ref' attribute is used to reference another bean -->
+        <property name="bookRepository" ref="bookRepository"/>
+    </bean>
+
+</beans>

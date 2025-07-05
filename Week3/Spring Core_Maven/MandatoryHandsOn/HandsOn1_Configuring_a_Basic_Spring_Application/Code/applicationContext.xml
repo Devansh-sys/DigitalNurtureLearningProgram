@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- 1. Define the repository bean -->
+    <bean id="bookRepository" class="com.library.repository.BookRepository">
+        <!-- This bean has no dependencies -->
+    </bean>
+
+    <!-- 2. Define the service bean and inject the repository -->
+    <bean id="bookService" class="com.library.service.BookService">
+        <!-- Use constructor-arg to inject the bean with the id 'bookRepository' -->
+        <constructor-arg ref="bookRepository"/>
+    </bean>
+
+</beans>
