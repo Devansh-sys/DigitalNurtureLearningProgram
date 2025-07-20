@@ -1,0 +1,97 @@
+<!-- pom.xml -->
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.7.5</version> <!-- Or any compatible version -->
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.example</groupId>
+    <artifactId>eureka-server</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>eureka-server</name>
+    <description>Eureka Discovery Server</description>
+    <properties>
+        <java.version>11</java.version>
+        <spring-cloud.version>2021.0.5</spring-cloud.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+```java
+// EurekaServerApplication.java
+package com.example.eurekaserver;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
+
+@SpringBootApplication
+@EnableEurekaServer // This annotation is crucial to enable the Eureka Server functionality
+public class EurekaServerApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(EurekaServerApplication.class, args);
+    }
+
+}
+```properties
+# application.properties
+
+# --- Server Port ---
+# The port on which the Eureka server will run. 8761 is the standard default.
+server.port=8761
+
+# --- Eureka Server Configuration ---
+# These settings are to configure the behavior of the Eureka server itself.
+
+# This server is a standalone server, so we don't want it to register with another Eureka server.
+# By default, a Eureka server is also a Eureka client and tries to register itself. We disable that here.
+eureka.client.register-with-eureka=false
+
+# We disable fetching the registry from another Eureka server.
+# This is because this is our only Eureka server in this setup.
+eureka.client.fetch-registry=false
+
+# Optional: Define the service URL for the Eureka server.
+# This is the URL that client services will use to connect to this server.
+# It's good practice to define it, although it can often be inferred.
+eureka.client.service-url.defaultZone=http://localhost:8761/eureka/
+
+# Optional: To avoid long startup delays in a single-node setup,
+# you can adjust the following settings for a development environment.
+# In a production environment with multiple Eureka nodes, you would remove these.
+eureka.server.wait-time-in-ms-when-sync-empty=0

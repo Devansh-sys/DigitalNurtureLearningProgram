@@ -1,0 +1,85 @@
+<!-- pom.xml (Add this dependency to both Account and Loan services) -->
+
+<!-- Add the Spring Cloud dependency management to your <dependencyManagement> section -->
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-dependencies</artifactId>
+            <version>2021.0.5</version> <!-- Use the same version as the Eureka Server -->
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+
+<!-- Add this Eureka Client dependency to your <dependencies> section -->
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+</dependency>
+```properties
+# application.properties (for Account Service)
+
+# --- Server Port ---
+# Run the account service on a different port, e.g., 8081
+server.port=8081
+
+# --- Application Name ---
+# This is the name the service will register with on the Eureka server.
+# It's how other services will find it.
+spring.application.name=ACCOUNT-SERVICE
+
+# --- Eureka Client Configuration ---
+# URL of the Eureka server where this service should register.
+eureka.client.service-url.defaultZone=http://localhost:8761/eureka/
+```properties
+# application.properties (for Loan Service)
+
+# --- Server Port ---
+# Run the loan service on a different port, e.g., 8082
+server.port=8082
+
+# --- Application Name ---
+# This is the name the service will register with on the Eureka server.
+spring.application.name=LOAN-SERVICE
+
+# --- Eureka Client Configuration ---
+# URL of the Eureka server where this service should register.
+eureka.client.service-url.defaultZone=http://localhost:8761/eureka/
+```java
+// AccountApplication.java (No change needed if using recent Spring Cloud versions)
+// The @EnableDiscoveryClient or @EnableEurekaClient annotation is no longer required
+// as long as spring-cloud-starter-netflix-eureka-client is on the classpath.
+// However, adding it explicitly does no harm and can improve clarity.
+
+package com.example.account;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+
+@SpringBootApplication
+@EnableDiscoveryClient // Explicitly enable service discovery
+public class AccountApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(AccountApplication.class, args);
+    }
+}
+```java
+// LoanApplication.java (No change needed if using recent Spring Cloud versions)
+package com.example.loan;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+
+@SpringBootApplication
+@EnableDiscoveryClient // Explicitly enable service discovery
+public class LoanApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(LoanApplication.class, args);
+    }
+}
